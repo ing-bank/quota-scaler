@@ -1,0 +1,94 @@
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: quotaautoscalers.ichp.ing.net
+spec:
+  group: ichp.ing.net
+  names:
+    kind: QuotaAutoscaler
+    listKind: QuotaAutoscalerList
+    plural: quotaautoscalers
+    shortNames:
+      - qa
+    singular: quotaautoscaler
+  scope: Namespaced
+  versions:
+    - additionalPrinterColumns:
+        - description: |-
+            CreationTimestamp is a timestamp representing the server time when this object was created. It is not guaranteed to be set in happens-before order across separate operations. Clients may not set this value. It is represented in RFC3339 form and is in UTC.
+            Populated by the system. Read-only. Null for lists. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#metadata
+          jsonPath: .metadata.creationTimestamp
+          name: Age
+          type: date
+      name: v1
+      served: true
+      storage: true
+      schema:
+        openAPIV3Schema:
+          type: object
+          properties:
+            spec:
+              type: object
+              required:
+                - resourceQuota
+              properties:
+                resourceQuota:
+                  type: string
+                  description: Name of the ResourceQuota in your namespace
+                minCpu:
+                  type: string
+                  description: Minimal CPU the Autoscaler can set for a quota
+                maxCpu:
+                  type: string
+                  description: Maximal CPU the Autoscaler can set for a quota
+                minCpuStep:
+                  type: string
+                  description: Minimal CPU that must be added or removed to or from a quota when scaling.
+                maxCpuStep:
+                  type: string
+                  description: Maximum CPU that must be added or removed to or from a quota when scaling.
+                minMemory:
+                  type: string
+                maxMemory:
+                  type: string
+                minMemoryStep:
+                  type: string
+                maxMemoryStep:
+                  type: string
+                behavior:
+                  type: object
+                  properties:
+                    scaleUp:
+                      type: object
+                      properties:
+                        policies:
+                          type: array
+                          items:
+                            type: object
+                            required:
+                              - method
+                              - value
+                            properties:
+                              method:
+                                type: string
+                              value:
+                                type: integer
+                        selectPolicy:
+                          type: string
+                    scaleDown:
+                      type: object
+                      properties:
+                        policies:
+                          type: array
+                          items:
+                            type: object
+                            required:
+                              - method
+                              - value
+                            properties:
+                              method:
+                                type: string
+                              value:
+                                type: integer
+                        selectPolicy:
+                          type: string

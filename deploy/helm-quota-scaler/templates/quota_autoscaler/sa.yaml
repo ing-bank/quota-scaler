@@ -1,0 +1,7 @@
+{{- $container := .Values.containers.scaler -}}
+
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: {{ $container.name }}-sa
+  namespace: {{ $container.namespace }}

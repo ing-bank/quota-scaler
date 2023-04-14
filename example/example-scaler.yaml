@@ -1,0 +1,20 @@
+apiVersion: ichp.ing.net/v1
+kind: QuotaAutoscaler
+metadata:
+  name: $NAMESPACE-scaler
+  namespace: $NAMESPACE
+spec:
+  behavior:
+    scaleDown:
+      policies:
+        - method: cpu
+          value: 100
+        - method: memory
+          value: 100
+    scaleUp:
+      policies:
+        - method: cpu
+          value: 100
+        - method: memory
+          value: 100
+  resourceQuota: $NAMESPACE-quota

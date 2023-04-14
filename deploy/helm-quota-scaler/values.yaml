@@ -1,0 +1,6 @@
+containers:
+  scaler:
+    namespace: ichp-quota-scaler
+    name: scaler
+    repository: "some-private-registry.ing.com/quota-scaler" # You should build your own image with your own resize endpoint!
+    tag: "latest"

@@ -1,0 +1,49 @@
+{{- $container := .Values.containers.scaler -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: {{ $container.name }}
+    name: {{ $container.name }}
+  name: {{ $container.name }}
+  namespace: {{ $container.namespace }}
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: {{ $container.name }}
+      deployment: {{ $container.name }}
+  strategy:
+    rollingUpdate:
+      maxSurge: 50%
+      maxUnavailable: 50%
+    type: RollingUpdate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: {{ $container.name }}
+        deployment: {{ $container.name }}
+    spec:
+      containers:
+        image: {{ $container.repository }}:{{ $container.tag }}
+        imagePullPolicy: Always
+        name: {{ $container.name }}
+        resources:
+          requests:
+            cpu: "200m"
+            memory: "2000M"
+          limits:
+            cpu: "2"
+            memory: "2000M"
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      serviceAccount: {{ $container.name }}-sa
+      serviceAccountName: {{ $container.name }}-sa
+      terminationGracePeriodSeconds: 6
